@@ -1,0 +1,81 @@
+{% extends 'catering_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Schedule Your Catering Reservation - Dish n' Dash
+{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+            Schedule Your Reservation
+        </h1>
+        <p class="mt-3 text-lg text-gray-600">Almost there! Please provide your details to complete the reservation.</p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+        <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Your Reservation Details</h2>
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="mt-8 w-full inline-flex items-center justify-center px-8 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+                    Place Reservation
+                    <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="lg:col-span-1 bg-gray-50 p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-5 pb-3 border-b border-gray-300 flex items-center">
+                <svg class="h-6 w-6 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Order Summary
+            </h2>
+            {% if cart and cart|length > 0 %}
+                <ul class="divide-y divide-gray-200 mb-6">
+                    {% for item_in_cart in cart %}
+                        <li class="py-3 flex justify-between items-center text-sm">
+                            <div class="flex-grow pr-2">
+                                <span class="font-medium text-gray-800">{{ item_in_cart.item.name }}</span>
+                                <span class="text-gray-500 block sm:inline"> (x{{ item_in_cart.quantity }})</span>
+                            </div>
+                            <span class="text-gray-700 font-medium">₱{{ item_in_cart.total_price|floatformat:2 }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="border-t border-gray-200 pt-4 space-y-2">
+                    <p class="flex justify-between text-lg font-semibold text-gray-900">
+                        <span>Subtotal:</span>
+                        <span class="text-green-600">₱{{ cart.get_total_price|floatformat:2 }}</span>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">Final amount, including any applicable taxes or fees, will be confirmed by our team.</p>
+                </div>
+                <div class="mt-6">
+                     <a href="{% url 'catering_app:cart_detail' %}" class="w-full text-sm inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                        <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Edit Cart
+                    </a>
+                </div>
+            {% else %}
+                <div class="text-center py-6">
+                    <svg class="mx-auto h-10 w-10 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <p class="mt-3 text-md font-medium text-gray-700">Your cart is empty.</p>
+                    <p class="mt-1 text-sm text-gray-500">Please add items to your cart before proceeding.</p>
+                    <a href="{% url 'catering_app:menu_list' %}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+                        Browse Menu
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %} 

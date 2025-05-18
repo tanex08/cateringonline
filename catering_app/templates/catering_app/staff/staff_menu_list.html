@@ -1,0 +1,93 @@
+{% extends "catering_app/staff_base.html" %}
+
+{% block title %}Menu Management - Staff Portal{% endblock %}
+
+{% block staff_content %}
+<div class="container mx-auto mt-10">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Menu Management</h1>
+        <div>
+            <a href="{% url 'catering_app:staff_category_create' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+                New Category
+            </a>
+            <a href="{% url 'catering_app:staff_menu_item_add' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                New Menu Item
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="p-4 mb-4 text-sm 
+                {% if message.tags == 'success' %}text-green-700 bg-green-100 rounded-lg{% endif %}
+                {% if message.tags == 'error' %}text-red-700 bg-red-100 rounded-lg{% endif %}
+                {% if message.tags == 'warning' %}text-yellow-700 bg-yellow-100 rounded-lg{% endif %}
+                {% if message.tags == 'info' %}text-blue-700 bg-blue-100 rounded-lg{% endif %}"
+                role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% for category in categories %}
+    <div class="mb-8 p-6 bg-white shadow-lg rounded-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-700">{{ category.name }}</h2>
+            <div>
+                <a href="{% url 'catering_app:staff_category_update' category.id %}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit Category</a>
+                <a href="{% url 'catering_app:staff_category_delete' category.id %}" class="text-red-600 hover:text-red-900 mr-3">Delete Category</a>
+                <a href="{% url 'catering_app:staff_menu_item_create' category.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm">
+                    Add Menu Item to {{category.name}}
+                </a>
+            </div>
+        </div>
+
+        {% if category.items.all %}
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Available</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for item in category.items.all %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₱{{ item.price }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if item.is_available %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Yes</span>
+                            {% else %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">No</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="h-10 w-10 object-cover rounded">
+                            {% else %}
+                                No Image
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="{% url 'catering_app:staff_menu_item_update' item.id %}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            <a href="{% url 'catering_app:staff_menu_item_delete' item.id %}" class="ml-4 text-red-600 hover:text-red-900">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500">No menu items in this category yet.</p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <p class="text-gray-700">No menu categories found. <a href="{% url 'catering_app:staff_category_create' %}" class="text-blue-500 hover:text-blue-800">Add one now!</a></p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

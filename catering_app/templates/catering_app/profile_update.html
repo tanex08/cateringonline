@@ -1,0 +1,94 @@
+{% extends 'catering_app/base.html' %}
+
+{% block title %}Update Profile - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-semibold text-gray-800 mb-6">Manage Your Profile</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-md 
+                    {% if message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 
+                    {% elif message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 
+                    {% else %} bg-blue-100 border border-blue-400 text-blue-700 {% endif %}"
+                     role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.first_name.id_for_label }}">
+                {{ form.first_name.label }}
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.help_text %}
+                <p class="text-gray-600 text-xs italic">{{ form.first_name.help_text }}</p>
+            {% endif %}
+            {% for error in form.first_name.errors %}
+                <p class="text-red-500 text-xs italic">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.last_name.id_for_label }}">
+                {{ form.last_name.label }}
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.help_text %}
+                <p class="text-gray-600 text-xs italic">{{ form.last_name.help_text }}</p>
+            {% endif %}
+            {% for error in form.last_name.errors %}
+                <p class="text-red-500 text-xs italic">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.email.id_for_label }}">
+                {{ form.email.label }}
+            </label>
+            {{ form.email }}
+            {% if form.email.help_text %}
+                <p class="text-gray-600 text-xs italic">{{ form.email.help_text }}</p>
+            {% endif %}
+            {% for error in form.email.errors %}
+                <p class="text-red-500 text-xs italic">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Update Profile
+            </button>
+            <a href="{% url 'catering_app:dashboard' %}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Back to Dashboard
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Tailwind classes to form fields
+    document.addEventListener('DOMContentLoaded', function() {
+        const fields = ['id_first_name', 'id_last_name', 'id_email'];
+        fields.forEach(function(fieldId) {
+            const input = document.getElementById(fieldId);
+            if (input) {
+                input.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'text-gray-700', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline');
+                if (input.errors) {
+                    input.classList.add('border-red-500');
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 

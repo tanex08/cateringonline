@@ -1,0 +1,26 @@
+{% extends 'catering_app/base.html' %}
+
+{% block title %}Activation Email Sent - Dish n' Dash{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl text-center">
+    <div class="mb-6">
+        <svg class="w-16 h-16 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M12 12.586l-4.293-4.293a1 1 0 00-1.414 1.414L10.586 14l-4.293 4.293a1 1 0 001.414 1.414L12 15.414l4.293 4.293a1 1 0 001.414-1.414L13.414 14l4.293-4.293a1 1 0 00-1.414-1.414L12 12.586z" />
+        </svg>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Confirm Your Email</h1>
+    <p class="text-gray-600 mb-6">
+        Thank you for registering! We've sent an activation link to your email address.
+        Please check your inbox (and spam folder) and click the link to complete your registration.
+    </p>
+    <p class="text-sm text-gray-500">
+        If you don't receive the email within a few minutes, please contact support.
+    </p>
+    <div class="mt-8">
+        <a href="{% url 'catering_app:home' %}" class="text-green-600 hover:text-green-700 font-medium transition-colors">
+            Back to Homepage
+        </a>
+    </div>
+</div>
+{% endblock %} 

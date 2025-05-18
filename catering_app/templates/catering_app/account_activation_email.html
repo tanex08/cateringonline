@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi {{ user.username }},
+
+Please click on the link below to activate your Dish n' Dash account:
+
+http://{{ domain }}{% url 'catering_app:activate' uidb64=uid token=token %}
+
+If you did not request this, please ignore this email.
+
+Thanks,
+The Dish n' Dash Team
+{% endautoescape %} 

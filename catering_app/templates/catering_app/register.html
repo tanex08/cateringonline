@@ -1,0 +1,59 @@
+{% extends 'catering_app/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Create Your Account - Dish n' Dash
+{% endblock title %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-var(--header-height)-var(--footer-height))] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <img class="mx-auto h-16 w-auto" src="{% static 'catering_app/images/logo.png' %}" alt="Dish n' Dash Logo">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Create Your Dish n' Dash Account
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Or <a href="{% url 'catering_app:login' %}" class="font-medium text-green-600 hover:text-green-500">
+                    sign in to your existing account
+                </a>
+            </p>
+        </div>
+
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl space-y-6">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="p-4 text-sm 
+                        {% if message.tags == 'success' %}bg-green-100 border-l-4 border-green-500 text-green-700
+                        {% elif message.tags == 'error' %}bg-red-100 border-l-4 border-red-500 text-red-700
+                        {% else %}bg-blue-100 border-l-4 border-blue-500 text-blue-700
+                        {% endif %} rounded-md" role="alert">
+                        <p class="font-medium">{{ message.tags|title }}</p>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div>
+                    <button type="submit" class="w-full group relative flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        Create Account
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <p class="mt-8 text-center text-sm text-gray-500">
+            By creating an account, you agree to our (not yet existing) <a href="#" class="font-medium text-gray-700 hover:text-green-600">Terms of Service</a> and <a href="#" class="font-medium text-gray-700 hover:text-green-600">Privacy Policy</a>.
+        </p>
+    </div>
+</div>
+{% endblock content %} 

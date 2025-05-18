@@ -1,0 +1,44 @@
+{% extends 'catering_app/base.html' %}
+
+{% block title %}
+Dashboard - Dish n' Dash
+{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto mt-10 px-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">{{ welcome_message }}</h1>
+        
+        <p class="text-gray-700 mb-8">This is your personal dashboard. From here, you can manage your account, view your order history, and more (once those features are built!).</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dashboard Card Example: View Menu -->
+            <a href="{% url 'catering_app:menu_list' %}" class="block p-6 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow hover:shadow-md transition-all">
+                <h2 class="text-xl font-semibold mb-2">Browse Our Menu</h2>
+                <p>Explore our delicious catering options and plan your next event.</p>
+            </a>
+
+            <!-- Dashboard Card Example: Order History (Placeholder) -->
+            <a href="{% url 'catering_app:order_history' %}" class="block p-6 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow hover:shadow-md transition-all">
+                <h2 class="text-xl font-semibold mb-2">My Order History</h2>
+                <p>View your past and upcoming orders.</p>
+            </a>
+
+            <!-- Dashboard Card Example: Profile (Placeholder) -->
+            <a href="{% url 'catering_app:profile_update' %}" class="block p-6 bg-purple-500 hover:bg-purple-600 text-white rounded-lg shadow hover:shadow-md transition-all">
+                <h2 class="text-xl font-semibold mb-2">Manage My Profile</h2>
+                <p>Update your contact details and preferences.</p>
+            </a>
+        </div>
+
+        <div class="mt-10 text-center">
+            <form method="post" action="{% url 'catering_app:logout' %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %} 

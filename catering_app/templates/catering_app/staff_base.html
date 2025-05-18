@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block staff_title %}Staff Portal - Dish n' Dash{% endblock %}</title>
+    <link href="{% static 'catering_app/css/output.css' %}" rel="stylesheet">
+    {# Add any staff-specific CSS or JS here if needed #}
+</head>
+<body class="bg-gray-200 font-sans leading-normal tracking-normal">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-gray-800 text-gray-100 p-4 space-y-2 shadow-lg">
+            <h1 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-3">Staff Portal</h1>
+            <nav>
+                <a href="{% url 'catering_app:staff_dashboard' %}" class="block py-2.5 px-4 rounded hover:bg-gray-700 hover:text-white transition duration-200">Dashboard</a>
+                <a href="{% url 'catering_app:staff_menu_list' %}" class="block py-2.5 px-4 rounded hover:bg-gray-700 hover:text-white transition duration-200">Menu Management</a>
+                <a href="{% url 'catering_app:staff_order_list' %}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">Order Management</a>
+                <a href="{% url 'catering_app:staff_review_list' %}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">Customer Reviews</a>
+                <a href="{% url 'catering_app:staff_sales_report' %}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">Sales Reports</a>
+                <a href="{% url 'catering_app:staff_user_list' %}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">User Management</a>
+            </nav>
+            <div class="mt-auto pt-6 border-t border-gray-700">
+                <p class="text-sm text-gray-400">User: {{ request.user.username }}</p>
+                <form method="post" action="{% url 'catering_app:logout' %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full text-left mt-2 py-2.5 px-4 rounded bg-red-500 hover:bg-red-600 text-white focus:outline-none">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6">
+            {% if messages %}
+                <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-4 rounded-md 
+                        {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700
+                        {% elif message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700
+                        {% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block staff_content %}
+                <h2 class="text-xl text-gray-700">Welcome to the Staff Portal!</h2>
+                <p class="text-gray-600">Select an option from the sidebar to get started.</p>
+            {% endblock %}
+        </main>
+    </div>
+</body>
+</html> 

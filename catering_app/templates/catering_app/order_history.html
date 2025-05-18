@@ -1,0 +1,94 @@
+{% extends 'catering_app/base.html' %}
+
+{% block title %}
+My Reservation History - Dish n' Dash
+{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+            My Reservation History
+        </h1>
+        <p class="mt-3 text-lg text-gray-600">Track your past and current reservations.</p>
+    </header>
+
+    {% if orders %}
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Date Placed</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Scheduled For</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Total</th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Guests</th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for order in orders %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span class="font-semibold text-gray-900">#{{ order.id }}</span>
+                                    <div class="text-xs text-gray-500 sm:hidden">{{ order.created_at|date:"M d, Y" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">{{ order.created_at|date:"M d, Y" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ order.scheduled_datetime|date:"M d, Y" }} <span class="block text-xs">{{ order.scheduled_datetime|date:"P" }}</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if order.status == 'DELIVERED' %}bg-green-100 text-green-800
+                                    {% elif order.status == 'CANCELLED' %}bg-red-100 text-red-800
+                                    {% elif order.status == 'PENDING' %}bg-yellow-100 text-yellow-800
+                                    {% elif order.status == 'CONFIRMED' %}bg-blue-100 text-blue-800
+                                    {% elif order.status == 'PREPARING' %}bg-indigo-100 text-indigo-800
+                                    {% elif order.status == 'OUT_FOR_DELIVERY' %}bg-purple-100 text-purple-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                    <div class="text-xs text-gray-500 md:hidden mt-1">₱{{ order.get_total_cost|floatformat:2 }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium hidden md:table-cell">₱{{ order.get_total_cost|floatformat:2 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center hidden lg:table-cell">{{ order.number_of_guests }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium">
+                                    {% if order.status == 'DELIVERED' %}
+                                        {% if order.review %}
+                                            <div class="flex items-center justify-center text-green-600">
+                                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                                <span>{{ order.review.rating }}/5</span>
+                                            </div>
+                                            <span class="text-xs text-gray-500">Reviewed</span>
+                                        {% else %}
+                                            <a href="{% url 'catering_app:add_review' order.id %}" class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                                                Leave Review
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-xs text-gray-400 italic">Review after delivery</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-16 bg-white shadow-xl rounded-lg">
+            <svg class="mx-auto h-16 w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9v3m0 0v3m0-3h3m-3 0H9m12-3h2l-4 4-4-4h2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v6h2" />
+            </svg>
+            <h2 class="mt-4 text-2xl font-semibold text-gray-800">No Reservations Yet</h2>
+            <p class="mt-2 text-md text-gray-600">You haven't made any reservations with us yet. Explore our menu to get started!</p>
+            <a href="{% url 'catering_app:menu_list' %}" class="mt-6 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+                Explore Our Menu
+                <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %} 
