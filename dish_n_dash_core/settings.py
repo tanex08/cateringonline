@@ -23,7 +23,7 @@ SECRET_KEY = 'django-insecure-zcaut)#34%^_@vz3zo@!u9f7!wyc3ig_1%@rp^*f9^$hj7w*h1
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['catering.jrgaid.site']
+ALLOWED_HOSTS = ['catering.jrgaid.site', '127.0.0.1']
 
 
 
@@ -142,7 +142,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-CSRF_TRUSTED_ORIGINS = ['https://catering.jrgaid.site']
+CSRF_TRUSTED_ORIGINS = ['https://catering.jrgaid.site', 'http://127.0.0.1']
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
